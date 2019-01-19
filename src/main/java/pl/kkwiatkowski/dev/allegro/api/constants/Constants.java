@@ -10,4 +10,6 @@ public class Constants {
     public static final String GET_LISTING_URL = "https://api.allegro.pl/offers/listing";
     public static final String AUTHORIZATION_CREDENTIALS = "ZTg5MzdmMGUzNTUxNDFmZDgyZjdkNTBkOGVhODEzNGY6U3kyeWdCeWRaWmVqNzVTOG5uVTFoYmhpeHd3OTBqUzZuRnRjaGQ1Mmc3ZTZGVDdhOVVaajIwbm9Sa2JyTEc0Tw==";
     public static final String ALLEGRO_JSON_TYPE = "application/vnd.allegro.public.v1+json";
+    public static final int PROMOTED_OFFERS_VALUE = 2;
+    public static final int REGULAR_OFFERS_VALUE = 1;
 }

@@ -5,13 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import pl.kkwiatkowski.dev.allegro.api.dao.Item;
 import pl.kkwiatkowski.dev.allegro.api.dao.OfferList;
+import pl.kkwiatkowski.dev.allegro.api.dao.OfferListResponse;
 import pl.kkwiatkowski.dev.allegro.api.exceptions.AuthorizationException;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static pl.kkwiatkowski.dev.allegro.api.constants.Constants.*;
 
@@ -21,17 +26,58 @@ public class ApiService {
 
     private RestTemplate restTemplate;
 
-    public OfferList searchForItems(String searchPhrase) throws IOException {
+    public OfferListResponse searchForItems(String searchPhrase) throws IOException {
         return getListnings(searchPhrase);
     }
 
-    private OfferList getListnings(String searchPhrase) throws IOException {
+    private OfferListResponse getListnings(String searchPhrase) throws IOException {
         checkForAccessToken();
 
         StringBuilder sb = new StringBuilder(GET_LISTING_URL);
         sb.append("?category.id=" + CATEGORY_ID + "&searchMode=REGULAR" + "&phrase=" + searchPhrase);
 
-        return callForListnings(sb);
+        OfferList offerList = callForListnings(sb);
+
+        List<Item> promotedList = offerList.getItems().getPromoted().stream()
+                .filter(item ->
+                        (item.getSellingMode().getFormat().equals("BUY_NOW")) &&
+                                (item.getImages().getUrl() != null)
+                ).collect(Collectors.toList());
+
+        List<Item> regularList = offerList.getItems().getRegular().stream()
+                .filter(item ->
+                        (item.getSellingMode().getFormat().equals("BUY_NOW")) &&
+                                (item.getImages().getUrl() != null)
+                ).collect(Collectors.toList());
+
+        List<Item> finalList = new ArrayList<>();
+
+        if (promotedList.size() != PROMOTED_OFFERS_VALUE) {
+            finalList.addAll(chooseRandomOffers(promotedList, PROMOTED_OFFERS_VALUE));
+        }
+        if (regularList.size() != REGULAR_OFFERS_VALUE) {
+            finalList.addAll(chooseRandomOffers(regularList, REGULAR_OFFERS_VALUE));
+        }
+
+        return new OfferListResponse(finalList);
+    }
+
+    private List<Item> chooseRandomOffers(List<Item> promotedList, int value) {
+        if (value == 0) {
+            try {
+                throw new Exception("Value cannot be zero of choosing offers");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<Item> choosedOffers = new ArrayList<>();
+
+        for (int i = 0; i < value; i++) {
+            choosedOffers.add(promotedList.get((int) (Math.random() * (promotedList.size() + 1)) + 1));
+        }
+
+        return choosedOffers;
     }
 
     private OfferList callForListnings(StringBuilder sb) throws IOException {
