@@ -18,7 +18,7 @@ public class ApiController {
     private ApiService apiService;
 
     @GetMapping(value = "/search_for_products/{searchPhrase}")
-    public OfferListResponse applyForLoan(@PathVariable String searchPhrase) throws IOException {
+    public OfferListResponse searchForProducts(@PathVariable String searchPhrase) throws IOException {
         return apiService.searchForItems(searchPhrase);
     }
 }

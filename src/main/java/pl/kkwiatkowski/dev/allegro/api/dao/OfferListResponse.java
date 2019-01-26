@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class OfferListResponse {
-    private List<Item> offersList;
+    private List<ResponseItem> offersList;
 }

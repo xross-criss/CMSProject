@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,8 +17,9 @@ public class Item {
     private Seller seller;
     private Promotion promotion;
     private Delivery delivery;
-    private Images images;
+    private List<Images> images;
     private SellingMode sellingMode;
     private Stock stock;
     private Category category;
+    private Publication publication;
 }

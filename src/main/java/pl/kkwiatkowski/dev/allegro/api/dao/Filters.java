@@ -16,4 +16,7 @@ public class Filters {
     private String type;
     private String name;
     private List<FilterValue> values;
+    private Number minValue;
+    private Number maxValue;
+    private String unit;
 }

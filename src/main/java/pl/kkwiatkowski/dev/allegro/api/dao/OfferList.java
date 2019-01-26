@@ -2,11 +2,13 @@ package pl.kkwiatkowski.dev.allegro.api.dao;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 public class OfferList {
     Items items;
     Categories categories;
-    Filters filters;
+    List<Filters> filters;
     SearchMeta searchMeta;
-    Sort sort;
+    List<Sort> sort;
 }

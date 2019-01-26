@@ -18,7 +18,7 @@
     </parent>
 
     <properties>
-        <java.version>11</java.version>
+        <!--<java.version>11</java.version>-->
         <start-class>pl.kkwiatkowski.dev.allegro.api.Application</start-class>
     </properties>
 
@@ -75,41 +75,41 @@
 
     <build>
         <plugins>
-            <!--            <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-enforcer-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>enforce-versions</id>
-                                    <goals>
-                                        <goal>enforce</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                            <configuration>
-                                <rules>
-                                    <requireMavenVersion>
-                                        <message>You are running an older version of Maven. Project requires at least Maven 3.0
-                                        </message>
-                                        <version>[3.0.0,)</version>
-                                    </requireMavenVersion>
-                                    <requireJavaVersion>
-                                        <message>You are running an older version of Java. Project requires at least JDK
-                                            ${java.version}
-                                        </message>
-                                        <version>[${java.version}.0,)</version>
-                                    </requireJavaVersion>
-                                </rules>
-                            </configuration>
-                        </plugin>-->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rules>
+                        <requireMavenVersion>
+                            <message>You are running an older version of Maven. Project requires at least Maven 3.0
+                            </message>
+                            <version>[3.0.0,)</version>
+                        </requireMavenVersion>
+                        <requireJavaVersion>
+                            <message>You are running an older version of Java. Project requires at least JDK
+                                ${java.version}
+                            </message>
+                            <version>[${java.version}.0,)</version>
+                        </requireJavaVersion>
+                    </rules>
+                </configuration>
+            </plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>
+                    <release>8</release>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 

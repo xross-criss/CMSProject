@@ -9,10 +9,10 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class FilterValue {
-    private String name;
-    private String value;
-    private String idSuffix;
-    private Integer count;
-    private boolean selected;
+public class ResponseItem {
+    private String offerId;
+    private String offerName;
+    private String offerPrice;
+    private String offerURL;
+    private String imageURL;
 }

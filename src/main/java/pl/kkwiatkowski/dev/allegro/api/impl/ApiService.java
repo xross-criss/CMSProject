@@ -2,13 +2,16 @@ package pl.kkwiatkowski.dev.allegro.api.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import pl.kkwiatkowski.dev.allegro.api.configuration.RestTemplateClient;
 import pl.kkwiatkowski.dev.allegro.api.dao.Item;
 import pl.kkwiatkowski.dev.allegro.api.dao.OfferList;
 import pl.kkwiatkowski.dev.allegro.api.dao.OfferListResponse;
 import pl.kkwiatkowski.dev.allegro.api.exceptions.AuthorizationException;
+import pl.kkwiatkowski.dev.allegro.api.utils.ItemUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -24,7 +27,8 @@ import static pl.kkwiatkowski.dev.allegro.api.constants.Constants.*;
 @Service
 public class ApiService {
 
-    private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplateClient restTemplate;
 
     public OfferListResponse searchForItems(String searchPhrase) throws IOException {
         return getListnings(searchPhrase);
@@ -38,41 +42,43 @@ public class ApiService {
 
         OfferList offerList = callForListnings(sb);
 
-        /*List<Item> promotedList = offerList.getItems().getPromoted().stream()
+        List<Item> promotedList = offerList.getItems().getPromoted().stream()
                 .filter(item ->
                         (item.getSellingMode().getFormat().equals("BUY_NOW")) &&
-                                (item.getImages().getUrl() != null)
+                                (item.getImages() != null) &&
+                                (item.getStock().getAvailable() <= 1)
                 ).collect(Collectors.toList());
 
         List<Item> regularList = offerList.getItems().getRegular().stream()
                 .filter(item ->
                         (item.getSellingMode().getFormat().equals("BUY_NOW")) &&
-                                (item.getImages().getUrl() != null)
+                                (item.getImages() != null) &&
+                                (item.getStock().getAvailable() <= 1)
                 ).collect(Collectors.toList());
 
         List<Item> finalList = new ArrayList<>();
 
-        if (promotedList.size() != PROMOTED_OFFERS_VALUE) {
+        if (promotedList.size() > PROMOTED_OFFERS_VALUE) {
             finalList.addAll(chooseRandomOffers(promotedList, PROMOTED_OFFERS_VALUE));
+        } else {
+            finalList.addAll(promotedList);
         }
-        if (regularList.size() != REGULAR_OFFERS_VALUE) {
+        if (regularList.size() > REGULAR_OFFERS_VALUE) {
             finalList.addAll(chooseRandomOffers(regularList, REGULAR_OFFERS_VALUE));
-        }*/
-
-        List<Item> finalList = new ArrayList<>();
-        finalList.addAll(chooseRandomOffers(offerList.getItems().getPromoted(), PROMOTED_OFFERS_VALUE));
-        finalList.addAll(chooseRandomOffers(offerList.getItems().getRegular(), REGULAR_OFFERS_VALUE));
+        } else {
+            finalList.addAll(regularList);
+        }
 
         OfferListResponse response = new OfferListResponse();
-        response.setOffersList(finalList);
+        response.setOffersList(ItemUtils.convertToResponseList(finalList));
 
         return response;
     }
 
     private List<Item> chooseRandomOffers(List<Item> promotedList, int value) {
-        if (value == 0) {
+        if (value == 0 || promotedList == null) {
             try {
-                throw new Exception("Value cannot be zero of choosing offers");
+                throw new Exception("offer values exception");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -102,7 +108,7 @@ public class ApiService {
     }
 
     private ResponseEntity<String> callForGET(String url, HttpEntity entity) {
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.restTemplate().exchange(url, HttpMethod.GET, entity, String.class);
 
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new AuthorizationException();
@@ -135,7 +141,7 @@ public class ApiService {
 
         AUTHORIZED_LOCALDATETIME = LocalDateTime.now();
         try {
-            ACCESS_TOKEN = objectMapper.readTree(response.getBody()).asText();
+            ACCESS_TOKEN = objectMapper.readTree(response.getBody()).get("access_token").asText();
         } catch (IOException e) {
             e.printStackTrace();
         }

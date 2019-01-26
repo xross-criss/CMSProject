@@ -12,5 +12,7 @@ import lombok.ToString;
 public class SellingMode {
     private String format;
     private Price price;
+    private Price fixedPrice;
     private Integer popularity;
+    private Integer bidCount;
 }

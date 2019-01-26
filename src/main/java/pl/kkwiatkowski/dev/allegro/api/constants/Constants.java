@@ -12,4 +12,5 @@ public class Constants {
     public static final String ALLEGRO_JSON_TYPE = "application/vnd.allegro.public.v1+json";
     public static final int PROMOTED_OFFERS_VALUE = 2;
     public static final int REGULAR_OFFERS_VALUE = 1;
+    public static final String OFFERS_URL = "http://www.allegro.pl/oferta/";
 }
