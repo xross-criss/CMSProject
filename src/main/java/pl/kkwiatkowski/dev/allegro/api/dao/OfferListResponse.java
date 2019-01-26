@@ -4,10 +4,7 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@ToString
+@Data
 public class OfferListResponse {
     private List<Item> offersList;
 }

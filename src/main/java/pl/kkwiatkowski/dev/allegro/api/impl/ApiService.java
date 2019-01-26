@@ -38,7 +38,7 @@ public class ApiService {
 
         OfferList offerList = callForListnings(sb);
 
-        List<Item> promotedList = offerList.getItems().getPromoted().stream()
+        /*List<Item> promotedList = offerList.getItems().getPromoted().stream()
                 .filter(item ->
                         (item.getSellingMode().getFormat().equals("BUY_NOW")) &&
                                 (item.getImages().getUrl() != null)
@@ -57,9 +57,16 @@ public class ApiService {
         }
         if (regularList.size() != REGULAR_OFFERS_VALUE) {
             finalList.addAll(chooseRandomOffers(regularList, REGULAR_OFFERS_VALUE));
-        }
+        }*/
 
-        return new OfferListResponse(finalList);
+        List<Item> finalList = new ArrayList<>();
+        finalList.addAll(chooseRandomOffers(offerList.getItems().getPromoted(), PROMOTED_OFFERS_VALUE));
+        finalList.addAll(chooseRandomOffers(offerList.getItems().getRegular(), REGULAR_OFFERS_VALUE));
+
+        OfferListResponse response = new OfferListResponse();
+        response.setOffersList(finalList);
+
+        return response;
     }
 
     private List<Item> chooseRandomOffers(List<Item> promotedList, int value) {
