@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import pl.kkwiatkowski.dev.allegro.api.configuration.RestTemplateClient;
 import pl.kkwiatkowski.dev.allegro.api.dao.Item;
 import pl.kkwiatkowski.dev.allegro.api.dao.OfferList;
@@ -30,15 +29,15 @@ public class ApiService {
     @Autowired
     private RestTemplateClient restTemplate;
 
-    public OfferListResponse searchForItems(String searchPhrase) throws IOException {
-        return getListnings(searchPhrase);
+    public OfferListResponse searchForItems(String request) throws IOException {
+        return getListnings(request);
     }
 
-    private OfferListResponse getListnings(String searchPhrase) throws IOException {
-        checkForAccessToken();
+    private OfferListResponse getListnings(String request) throws IOException {
+//        checkForAccessToken();
 
         StringBuilder sb = new StringBuilder(GET_LISTING_URL);
-        sb.append("?category.id=" + CATEGORY_ID + "&searchMode=REGULAR" + "&phrase=" + searchPhrase);
+        sb.append("?category.id=" + CATEGORY_ID + "&searchMode=REGULAR" + "&phrase=" + request);
 
         OfferList offerList = callForListnings(sb);
 
