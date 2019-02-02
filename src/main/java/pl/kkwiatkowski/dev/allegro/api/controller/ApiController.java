@@ -19,6 +19,6 @@ public class ApiController {
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     OfferListResponse searchForProducts(@RequestBody ItemRequest request) throws IOException {
-        return apiService.searchForItems(request.getRequest());
+        return apiService.searchForItems(request.getKey());
     }
 }

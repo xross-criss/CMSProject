@@ -86,7 +86,7 @@ public class ApiService {
         List<Item> choosedOffers = new ArrayList<>();
 
         for (int i = 0; i < value; i++) {
-            choosedOffers.add(promotedList.get((int) (Math.random() * (promotedList.size() + 1)) + 1));
+            choosedOffers.add(promotedList.get((int) (Math.random() * (promotedList.size())) + 1));
         }
 
         return choosedOffers;

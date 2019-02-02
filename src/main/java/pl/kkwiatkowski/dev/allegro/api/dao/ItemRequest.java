@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ItemRequest {
-    private String request;
+    private String key;
 }
